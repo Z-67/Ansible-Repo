@@ -1,0 +1,40 @@
+---
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Install Apache2
+      apt:
+        name: apache2
+        update_cache: yes
+        state: latest
+
+    - name: Enable mod_rewrite
+      apache2_module:
+        name: rewrite
+        state: present
+      notify:
+        - Restart Apache2
+
+    - name: Configure Apache to listen on port 8081
+      lineinfile:
+        dest: /etc/apache2/ports.conf
+        regexp: "^Listen 80"
+        line: "Listen 8081"
+        state: present
+      notify:
+        - Restart Apache2
+
+    - name: Configure Apache VirtualHost for port 8081
+      lineinfile:
+        dest: /etc/apache2/sites-available/000-default.conf
+        regexp: "^<VirtualHost \\*:80>"
+        line: "<VirtualHost *:8081>"
+        state: present
+      notify:
+        - Restart Apache2
+
+  handlers:
+    - name: Restart Apache2
+      service:
+        name: apache2
+        state: restarted
