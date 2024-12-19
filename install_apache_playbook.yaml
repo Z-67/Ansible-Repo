@@ -1,8 +1,8 @@
 ---
 - hosts: webservers
   become: yes
-    vars_files:
-    - secrets.yml
+  vars_files:
+    -~/devopsLabs/ansible/ansible-apache/secrets.yml
   tasks:
     - name: Fix apt repository sources
       copy:
