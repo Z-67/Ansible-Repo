@@ -28,4 +28,7 @@
         state: present
         update_cache: yes
 
-
+    - name: Deploy HTML Page
+      copy:
+        src: /var/lib/jenkins/workspace/ansible-jenkins-pipeline/index.html
+        dest: /var/www/html/index.html
